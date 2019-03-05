@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
-package epos.service.interface.notifications;
+option csharp_namespace = "Epos.Service.Interface.Notifications";
 
 service ItemChangesService
 {
