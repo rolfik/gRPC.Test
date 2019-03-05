@@ -26,6 +26,7 @@ namespace Epos.Service.Core.Notifications
         public override Task Monitor(ItemsFilter request, ResponseStream responseStream, ServerCallContext context)
         {
             OnMonitorStarted(context, responseStream);
+            context.CancellationToken.Register(() => OnMonitorEnded(context, responseStream));
             return Task.CompletedTask;
         }
 
@@ -38,6 +39,17 @@ namespace Epos.Service.Core.Notifications
             }
         }
 
+        private void OnMonitorEnded(ServerCallContext context, ResponseStream responseStream)
+        {
+            lock (monitorCalls)
+            {
+                var index = monitorCalls.IndexOf((context, responseStream));
+                if (index >= 0)
+                    OnMonitorEnded(context, index);
+                else
+                    Console.WriteLine($"{nameof(Monitor)} client {context.Peer} not found");
+            }
+        }
         private void OnMonitorEnded(ServerCallContext context, int index)
         {
             Console.WriteLine($"{nameof(Monitor)} client {context.Peer} disconnected with status {context.Status}");
