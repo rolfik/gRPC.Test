@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+package epos.service.interface.notifications;
+
+service ItemChangesService
+{
+	rpc Monitor(ItemsFilter) returns (stream ItemsChanged);
+}
+
+message ItemsFilter
+{
+}
+
+message ItemsChanged
+{
+	string name = 1;
+	repeated string addedIds = 10;
+	repeated string updatedIds = 11;
+	repeated string removedIds = 12;
+}
