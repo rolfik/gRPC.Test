@@ -63,7 +63,7 @@ namespace Epos.Service.Core.Notifications
             {
                 await ResponseStream.WriteAsync(response);
             }
-            catch (RpcException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
