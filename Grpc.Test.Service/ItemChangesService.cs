@@ -26,13 +26,7 @@ namespace Epos.Service.Core.Notifications
 
         #endregion
 
-        public override Task Monitor(ItemsFilter request, ResponseStream responseStream, ServerCallContext context)
-        {
-            var call = new ServerStreamingCall<ItemsFilter, ItemsChanged>(context, request, responseStream);
-            lock (monitorCalls)
-                monitorCalls.Add(call);
-            return call.Task;
-        }
+        public override Task Monitor(ItemsFilter request, ResponseStream responseStream, ServerCallContext context) => monitorCalls.Add(context, request, responseStream).Task;
 
         private async void OnItemsChanged(ItemsChanged change) => await monitorCalls.Write(i => change);
 

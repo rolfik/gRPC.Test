@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grpc.Core;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,12 @@ namespace Epos.Service.Core.Notifications
     {
         public string Method { get; private set; }
 
+        public ServerStreamingCall<TRequest, TResponse> Add(ServerCallContext context, TRequest request, IServerStreamWriter<TResponse> responseStream)
+        {
+            var call = new ServerStreamingCall<TRequest, TResponse>(context, request, responseStream);
+            Add(call);
+            return call;
+        }
         public void Add(ServerStreamingCall<TRequest, TResponse> call)
         {
             lock (calls)
